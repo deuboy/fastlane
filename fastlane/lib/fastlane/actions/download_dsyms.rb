@@ -102,7 +102,8 @@ module Fastlane
 
               unless download_url
                 if !wait_for_dsym_processing || (Time.now - start) > (60 * 5)
-                  UI.error("Could not find any dSYM for #{build.build_version} (#{train.version_string})")
+                  # In some cases, AppStoreConnect does not process the dSYMs, thus no error should be thrown.
+                  UI.message("Could not find any dSYM for #{build.build_version} (#{train.version_string})")
                 else
                   UI.message("Waiting for dSYM file to appear...")
                   sleep(30)
@@ -113,8 +114,12 @@ module Fastlane
               break
             end
 
-            self.download(download_url, app.bundle_id, train.version_string, build.build_version, output_directory)
-            break if build_number
+            if download_url
+              self.download(download_url, app.bundle_id, train.version_string, build.build_version, output_directory)
+              break if build_number
+            else
+              UI.message("No dSYM URL for #{build.build_version} (#{train.version_string})")
+            end
           end
         end
 
