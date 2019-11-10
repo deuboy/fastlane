@@ -617,7 +617,7 @@ module Spaceship
     # @!group Helpers
     #####################################################
 
-    def with_retry(tries = 5, &_block)
+    def with_retry(tries = 100, &_block)
       return yield
     rescue \
         Faraday::Error::ConnectionFailed,
@@ -631,7 +631,7 @@ module Spaceship
         puts(msg) if Spaceship::Globals.verbose?
         logger.warn(msg)
 
-        sleep(3) unless Object.const_defined?("SpecHelper")
+        sleep(5) unless Object.const_defined?("SpecHelper")
         retry
       end
       raise ex # re-raise the exception
@@ -644,7 +644,7 @@ module Spaceship
         puts(msg) if Spaceship::Globals.verbose?
         logger.warn(msg)
 
-        sleep(3) unless Object.const_defined?("SpecHelper")
+        sleep(5) unless Object.const_defined?("SpecHelper")
         retry
       end
       raise ex # re-raise the exception
@@ -659,7 +659,7 @@ module Spaceship
         end
 
         do_login(self.user, @password)
-        sleep(3) unless Object.const_defined?("SpecHelper")
+        sleep(5) unless Object.const_defined?("SpecHelper")
         retry
       end
       raise ex # re-raise the exception
