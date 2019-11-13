@@ -749,13 +749,12 @@ module Spaceship
         end
         if list_response.status == 200
           agreementId = list_response.body["agreements"][0]['agreementId']
-          response = request(:post) do |req|
+          request(:post) do |req|
             req.url("https://developer.apple.com/services-account/QH65B2/account/acceptAgreements")
             req.body={"teamId"=>@current_team_id,"agreementIds"=>[agreementId]}.to_json
             req.headers['Content-Type'] = 'application/json'
             req.headers['Accept'] = 'application/json'
           end
-          return if response.status == 200
         end
 
         raise ProgramLicenseAgreementUpdated, "#{body['userString']} Please manually log into your Apple Developer account to review and accept the updated agreement."
