@@ -740,6 +740,24 @@ module Spaceship
       elsif body.to_s.include?("Gateway Timeout - In read")
         raise GatewayTimeoutError, "Received a gateway timeout error from App Store Connect / Developer Portal, please try again later"
       elsif (body["userString"] || "").include?("Program License Agreement")
+
+        list_response = request(:post) do |req|
+          req.url("https://developer.apple.com/services-account/QH65B2/account/listPendingAgreements")
+          req.body={"teamId"=>@current_team_id,"languageIsoCode"=>"en"}.to_json
+          req.headers['Content-Type'] = 'application/json'
+          req.headers['Accept'] = 'application/json'
+        end
+        if list_response.status == 200
+          agreementId = list_response.body["agreements"][0]['agreementId']
+          response = request(:post) do |req|
+            req.url("https://developer.apple.com/services-account/QH65B2/account/acceptAgreements")
+            req.body={"teamId"=>@current_team_id,"agreementIds"=>[agreementId]}.to_json
+            req.headers['Content-Type'] = 'application/json'
+            req.headers['Accept'] = 'application/json'
+          end
+          return if response.status == 200
+        end
+
         raise ProgramLicenseAgreementUpdated, "#{body['userString']} Please manually log into your Apple Developer account to review and accept the updated agreement."
       end
     end
