@@ -878,7 +878,7 @@ module Spaceship
           raise BadGatewayError.new, "Apple 502 detected - this might be temporary server error, try again later"
         end
 
-        if response.body.to_s.include?("<h3>Gateway Timeout</h3>")
+        if response.body.to_s.include?("<h3>Gateway Timeout</h3>") || response.body.to_s.include?("<H1>Server Connection Closed</H1>")
           raise GatewayTimeoutError.new, "Apple 504 detected - this might be temporary server error, try again later"
         end
 
