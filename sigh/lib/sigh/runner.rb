@@ -274,6 +274,7 @@ module Sigh
       return if Spaceship::App.find(Sigh.config[:app_identifier], mac: Sigh.config[:platform].to_s == 'macos')
       print_produce_command(Sigh.config)
       UI.user_error!("Could not find App with App Identifier '#{Sigh.config[:app_identifier]}'")
+      raise "Could not find App with App Identifier '#{Sigh.config[:app_identifier]}'"
     end
 
     def print_produce_command(config)
