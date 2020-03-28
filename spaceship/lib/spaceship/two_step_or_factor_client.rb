@@ -125,6 +125,11 @@ module Spaceship
       puts("")
       env_2fa_sms_default_phone_number = ENV["SPACESHIP_2FA_SMS_DEFAULT_PHONE_NUMBER"]
 
+      home_path = File::expand_path('~')
+      if !File::exist?("#{home_path}/#{self.user}_lock.err")
+        raise "code lock while initing"
+      end
+
       if env_2fa_sms_default_phone_number
         raise Tunes::Error.new, "Environment variable SPACESHIP_2FA_SMS_DEFAULT_PHONE_NUMBER is set, but empty." if env_2fa_sms_default_phone_number.empty?
 
@@ -155,11 +160,6 @@ module Spaceship
         puts("(Read more at: https://github.com/fastlane/fastlane/blob/master/spaceship/docs/Authentication.md#auto-select-sms-via-spaceship-2fa-sms-default-phone-number)")
         puts("")
         code_type = 'trusteddevice'
-
-        home_path = File::expand_path('~')
-        if !File::exist?("#{home_path}/#{self.user}_lock.err")
-          raise "code lock while initing"
-        end
 
         code = ask_for_2fa_code("Please enter the #{code_length} digit code:")
 
