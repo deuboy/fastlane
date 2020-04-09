@@ -23,7 +23,7 @@ module Spaceship
   # rubocop:disable Metrics/ClassLength
   class Client
     PROTOCOL_VERSION = "QH65B2"
-    USER_AGENT = "Spaceship #{Fastlane::VERSION}"
+    USER_AGENT = "Xcode" # "Spaceship #{Fastlane::VERSION}"
     AUTH_TYPES = ["sa", "hsa", "non-sa", "hsa2"]
 
     attr_reader :client
